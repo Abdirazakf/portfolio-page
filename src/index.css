@@ -51,10 +51,12 @@
 .tilt-wrapper {
   perspective: 1000px;
   transform-style: preserve-3d;
+  pointer-events: none; /* wrapper has no content; never intercept clicks */
 }
 .tilt-card {
   transform-style: preserve-3d;
   transition: transform 0.2s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  pointer-events: auto; /* re-enable on the actual card content */
 }
 
 @media (hover: none) and (pointer: coarse) {
@@ -85,10 +87,16 @@
 }
 
 /* Metallic Pokémon gym-badge medallions */
+.badge-row {
+  position: relative;
+  transform-style: flat;
+  z-index: 40;
+}
 .badge-medallion {
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  transform: translateZ(1px);
   border: 2px solid rgba(51, 65, 85, 0.9);
   background:
     radial-gradient(circle at 28% 22%, rgba(255,255,255,0.98) 0%, rgba(255,255,255,0.78) 10%, rgba(226,232,240,0.5) 22%, transparent 38%),
@@ -127,13 +135,28 @@
   z-index: 2;
   pointer-events: none;
   user-select: none;
-  mix-blend-mode: multiply;
-  opacity: 0.92;
+  width: 68%;
+  height: 68%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   transform: translateZ(0);
 }
 
-.badge-ksu .badge-logo {
-  filter: grayscale(1) contrast(1.28) brightness(0.78) drop-shadow(1px 1px 0 rgba(255,255,255,0.5)) drop-shadow(-1px -1px 0 rgba(15,23,42,0.45));
+.badge-logo svg {
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: block;
+}
+
+.badge-logo-lg {
+  width: 62%;
+  height: 62%;
+}
+
+.badge-ksu .badge-logo svg {
+  filter: grayscale(1) contrast(1.25) brightness(0.72) drop-shadow(1px 1px 0 rgba(255,255,255,0.5)) drop-shadow(-1px -1px 0 rgba(15,23,42,0.45));
 }
 
 .badge-tcs {
@@ -144,8 +167,8 @@
     linear-gradient(135deg, #fff7ed 0%, #facc15 32%, #d97706 62%, #78350f 100%);
 }
 
-.badge-tcs .badge-logo {
-  filter: sepia(1) saturate(2.2) hue-rotate(350deg) contrast(1.18) brightness(0.86) drop-shadow(1px 1px 0 rgba(255,248,220,0.62)) drop-shadow(-1px -1px 0 rgba(92,53,10,0.42));
+.badge-tcs .badge-logo svg {
+  filter: sepia(1) saturate(2) hue-rotate(348deg) contrast(1.12) brightness(0.9) drop-shadow(1px 1px 0 rgba(255,248,220,0.6)) drop-shadow(-1px -1px 0 rgba(92,53,10,0.42));
 }
 
 .badge-sweep {

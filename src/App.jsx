@@ -1,5 +1,10 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+// Local assets (bundled by Vite)
+import bgVideo from './assets/night-cycle-to-eterna-pokemon-diamond-and-pearl-pixel-moewalls-com.mp4';
+import ksuSvg from './assets/Kennesaw_State_Owls_logo.svg?raw';
+import tcsSvg from './assets/tcs.svg?raw';
+
 // Data Constants
 const profileData = {
   name: "Abdi Farah",
@@ -15,13 +20,21 @@ const badgeLogoData = [
     id: 'ksu',
     name: 'Kennesaw State University',
     alt: 'Kennesaw State Owls logo',
-    toneClass: 'badge-ksu'
+    toneClass: 'badge-ksu',
+    svg: ksuSvg,
+    role: 'B.S. Computer Engineering',
+    period: '2021 — May 2025',
+    detail: 'Bachelor of Science in Computer Engineering. Coursework across embedded systems, full-stack development, and software design.'
   },
   {
     id: 'tcs',
-    name: 'TCS',
+    name: 'Tata Consultancy Services',
     alt: 'TCS infinity mark logo',
-    toneClass: 'badge-tcs'
+    toneClass: 'badge-tcs',
+    svg: tcsSvg,
+    role: 'Software Engineer',
+    period: '2025 — Present · Milford, OH',
+    detail: 'Full-stack development with Node.js, code reviews, unit testing, and feature delivery in an Agile/Scrum team.'
   }
 ];
 
@@ -45,8 +58,6 @@ const projectsData = [
     tags: ["OpenAI API", "Next.js"]
   }
 ];
-
-const rotations = ['-rotate-3 translate-y-4', 'rotate-2 -translate-y-2', 'rotate-3 translate-y-6'];
 
 export default function App() {
   const [loaderState, setLoaderState] = useState('active'); // active, hiding, hidden
@@ -123,20 +134,26 @@ export default function App() {
     return () => elements.forEach((el) => observer.unobserve(el));
   }, []);
 
-  // 3D Tilt Handlers
+  // 3D Tilt Handlers (tracked on the section so the wrapper never sits in the click path)
   const handleMouseMove = (e) => {
     if (window.matchMedia("(hover: none)").matches) return;
-    if (!wrapperRef.current || !cardRef.current) return;
-    
-    const rect = wrapperRef.current.getBoundingClientRect();
+    if (!cardRef.current) return;
+
+    const rect = cardRef.current.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
     const centerX = rect.width / 2;
     const centerY = rect.height / 2;
-    
+
+    // Only tilt while the pointer is actually over the card area
+    if (x < 0 || y < 0 || x > rect.width || y > rect.height) {
+      cardRef.current.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      return;
+    }
+
     const rotateX = ((y - centerY) / centerY) * -12;
     const rotateY = ((x - centerX) / centerX) * 12;
-    
+
     cardRef.current.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
   };
 
@@ -147,14 +164,30 @@ export default function App() {
   };
 
   // Badge Modal Handlers
-  const openModal = (badge) => {
+  const justOpenedRef = useRef(false);
+
+  const openModal = (e, badge) => {
+    if (e) {
+      e.stopPropagation();
+      e.preventDefault();
+    }
     setSelectedBadge(badge);
     document.body.style.overflow = 'hidden';
+    // Ignore any close events fired by this same pointer interaction
+    justOpenedRef.current = true;
+    setTimeout(() => { justOpenedRef.current = false; }, 350);
   };
 
-  const closeModal = () => {
+  const doClose = () => {
+    if (justOpenedRef.current) return;
     setSelectedBadge(null);
     document.body.style.overflow = '';
+  };
+
+  const backdropClose = (e) => {
+    // Only the backdrop element itself should close (ignore bubbled clicks)
+    if (e.currentTarget !== e.target) return;
+    doClose();
   };
 
   // Project Click Handler
@@ -168,7 +201,7 @@ export default function App() {
   // Esc key for modal
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && selectedBadge) closeModal();
+      if (e.key === 'Escape' && selectedBadge) doClose();
     };
     document.addEventListener('keydown', handleKeyDown);
     return () => document.removeEventListener('keydown', handleKeyDown);
@@ -183,8 +216,7 @@ export default function App() {
         muted 
         playsInline 
         className="fixed inset-0 w-full h-full object-cover z-0 pointer-events-none" 
-        src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/c6f09f05-9b62-4141-b454-bb9d51821314_video.mp4" 
-        poster="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/025bc8d0-497f-4476-934f-d9dcfe6b7458_1600w.jpg"
+        src={bgVideo} 
       />
 
       {/* Sync Loader */}
@@ -205,23 +237,21 @@ export default function App() {
 
       <div onClick={resetProjects} className="relative z-10 w-full flex flex-col min-h-screen">
         {/* SECTION 1: HERO / TRAINER CARD */}
-        <section className="min-h-screen flex w-full mb-2 px-4 relative items-center justify-center">
+        <section 
+          className="min-h-screen flex w-full mb-2 px-4 relative items-center justify-center"
+          onMouseMove={handleMouseMove}
+          onMouseLeave={handleMouseLeave}
+        >
           <div 
             className="tilt-wrapper w-full max-w-4xl mx-auto" 
             ref={wrapperRef}
-            onMouseMove={handleMouseMove}
-            onMouseLeave={handleMouseLeave}
           >
-            <div className="tilt-card gba-window relative p-1 pb-6 w-full flex flex-col gap-4" ref={cardRef}>
-              <iconify-icon icon="mdi:pokeball" className="absolute top-1/2 left-1/2 -translate-y-1/2 -translate-x-1/2 text-[450px] text-white opacity-20 pointer-events-none z-0"></iconify-icon>
-              
+            <div className="tilt-card gba-window relative p-1 pb-6 w-full flex flex-col gap-4" ref={cardRef}>              
               {/* Header */}
               <div className="p-6 pb-2 flex justify-center gap-4 items-center relative z-20">
-                <iconify-icon icon="mdi:pokeball" className="text-white text-3xl drop-shadow-md"></iconify-icon>
                 <h1 className="font-pixel text-xl md:text-3xl pt-2 title-gba uppercase">
                   TRAINER CARD
                 </h1>
-                <iconify-icon icon="mdi:pokeball" className="text-white text-3xl drop-shadow-md"></iconify-icon>
               </div>
 
               {/* Main Content Grid */}
@@ -267,20 +297,21 @@ export default function App() {
               {/* Badge Row */}
               <div className="px-8 mt-8 mb-4 relative z-20">
                 <div className="w-full h-1 bg-white/30 rounded-full mb-6"></div>
-                <div className="flex items-center gap-4 flex-wrap px-4 justify-start">
+                <div className="badge-row flex items-center gap-4 flex-wrap px-4 justify-start">
                   {badgeLogoData.map((badge) => (
                     <button 
                       key={badge.id}
                       type="button" 
-                      onClick={() => openModal(badge)}
+                      onClick={(e) => openModal(e, badge)}
+                      style={{ position: 'relative', zIndex: 40 }}
                       className={`badge-medallion ${badge.toneClass} w-14 h-14 rounded-full flex items-center justify-center hover:scale-110 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400 focus-visible:ring-offset-2 cursor-pointer`} 
                       aria-label={`Open ${badge.name} badge`}
                     >
-                      <img 
-                        src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/917d6f93-fb36-439a-8c48-884b67b35381_1600w.jpg" 
-                        alt={badge.alt} 
-                        className="badge-logo w-3/4 h-3/4 object-contain select-none" 
-                        draggable="false"
+                      <span 
+                        className="badge-logo" 
+                        role="img" 
+                        aria-label={badge.alt}
+                        dangerouslySetInnerHTML={{ __html: badge.svg }}
                       />
                       <span className="badge-sweep" aria-hidden="true"></span>
                     </button>
@@ -297,33 +328,35 @@ export default function App() {
           <h2 className="font-pixel tracking-tight text-xl text-center mb-10 text-slate-800">
             DATA / LOG
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 justify-items-center items-end min-h-[450px] w-full max-w-5xl mx-auto pt-10 pb-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 justify-items-center items-start min-h-[450px] w-full max-w-5xl mx-auto pt-10 pb-8">
             {projectsData.map((project, index) => {
               const isActive = activeProject === index;
-              const isBlurred = activeProject !== null && activeProject !== index;
-              const rotClass = rotations[index % rotations.length];
+              const isDimmed = activeProject !== null && activeProject !== index;
 
               return (
                 <div 
                   key={index}
                   onClick={(e) => toggleProject(e, index)}
-                  className={`project-card self-end w-full max-w-[320px] transition-all duration-700 ease-out cursor-pointer group ${
+                  className={`project-card w-full max-w-[320px] transition-all duration-500 ease-out cursor-pointer group ${
                     isActive 
-                      ? 'translate-y-[-16px] rotate-0 scale-105 z-50 opacity-100 blur-none' 
-                      : isBlurred 
-                        ? `${rotClass} blur-sm opacity-50 z-10` 
-                        : `${rotClass} hover:scale-105 z-10 opacity-100 blur-none`
+                      ? 'scale-105 z-30 opacity-100' 
+                      : isDimmed 
+                        ? 'scale-95 opacity-40 z-10' 
+                        : 'hover:scale-[1.03] z-10 opacity-100'
                   }`}
-                  style={{ filter: isBlurred ? 'blur(6px)' : '' }}
                 >
-                  <div className="gba-inner-window p-5 sm:p-6 flex flex-col h-full bg-white/95 backdrop-blur shadow-lg border border-slate-300 hover:shadow-xl transition-shadow duration-500 rounded-xl relative overflow-hidden">
+                  <div className={`gba-inner-window p-5 sm:p-6 flex flex-col bg-white/95 backdrop-blur shadow-lg border transition-all duration-500 rounded-xl relative overflow-hidden ${
+                    isActive ? 'border-sky-400 shadow-2xl' : 'border-slate-300 hover:shadow-xl'
+                  }`}>
                     <h3 className="font-pixel text-sm text-slate-800 mb-1 tracking-tight group-hover:text-sky-600 transition-colors">
                       {project.title}
                     </h3>
                     <p className="text-[10px] sm:text-xs text-slate-500 font-medium mb-3">
                       {project.subtitle}
                     </p>
-                    <p className="text-xs sm:text-sm text-slate-600 flex-grow leading-relaxed line-clamp-3">
+                    <p className={`text-xs sm:text-sm text-slate-600 leading-relaxed transition-all duration-500 ${
+                      isActive ? '' : 'line-clamp-3'
+                    }`}>
                       {project.desc}
                     </p>
                     <div 
@@ -337,6 +370,11 @@ export default function App() {
                         </span>
                       ))}
                     </div>
+                    <span className={`mt-3 text-[9px] font-pixel text-center text-sky-500 transition-opacity duration-300 ${
+                      isActive ? 'opacity-0' : 'opacity-60 group-hover:opacity-100'
+                    }`}>
+                      SELECT
+                    </span>
                   </div>
                 </div>
               );
@@ -347,16 +385,15 @@ export default function App() {
         {/* SECTION 3: FOOTER */}
         <footer className="w-full mt-auto py-12 reveal flex flex-col items-center gap-6">
           <div className="flex gap-4">
-            <a href="#" target="_blank" rel="noopener noreferrer" className="gba-inner-window px-4 py-2 flex items-center gap-2 hover:bg-slate-100 transition-colors cursor-pointer group">
+            <a href="https://www.github.com/Abdirazakf" target="_blank" rel="noopener noreferrer" className="gba-inner-window px-4 py-2 flex items-center gap-2 hover:bg-slate-100 transition-colors cursor-pointer group">
               <iconify-icon icon="solar:code-circle-linear" width="20" className="text-slate-600 group-hover:text-black"></iconify-icon>
               <span className="font-pixel text-xs pt-1">GITHUB</span>
             </a>
-            <a href="#" target="_blank" rel="noopener noreferrer" className="gba-inner-window px-4 py-2 flex items-center gap-2 hover:bg-slate-100 transition-colors cursor-pointer group">
+            <a href="https://www.linkedin.com/in/abdirazak-farah" target="_blank" rel="noopener noreferrer" className="gba-inner-window px-4 py-2 flex items-center gap-2 hover:bg-slate-100 transition-colors cursor-pointer group">
               <iconify-icon icon="solar:user-id-linear" width="20" className="text-slate-600 group-hover:text-[#0077b5]"></iconify-icon>
               <span className="font-pixel text-xs pt-1">LINKEDIN</span>
             </a>
           </div>
-          <p className="text-xs text-slate-400">SELECT to Start</p>
         </footer>
       </div>
 
@@ -366,7 +403,7 @@ export default function App() {
           selectedBadge ? 'opacity-100' : 'opacity-0 pointer-events-none'
         }`}
       >
-        <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm cursor-pointer" onClick={closeModal}></div>
+        <div className="absolute inset-0 bg-slate-900/40 backdrop-blur-sm cursor-pointer" onClick={backdropClose}></div>
         
         {selectedBadge && (
           <div className="relative z-10 flex flex-col items-center gap-6 pointer-events-none">
@@ -374,21 +411,32 @@ export default function App() {
               className={`badge-medallion ${selectedBadge.toneClass} w-48 h-48 rounded-full shadow-2xl flex items-center justify-center spin-3d relative overflow-hidden`}
               aria-label={`${selectedBadge.name} badge`}
             >
-              <img 
-                src="https://hoirqrkdgbmvpwutwuwj.supabase.co/storage/v1/object/public/assets/assets/917d6f93-fb36-439a-8c48-884b67b35381_1600w.jpg" 
-                alt={selectedBadge.alt} 
-                className="badge-logo w-2/3 h-2/3 object-contain select-none" 
-                draggable="false"
+              <span 
+                className="badge-logo badge-logo-lg" 
+                role="img" 
+                aria-label={selectedBadge.alt}
+                dangerouslySetInnerHTML={{ __html: selectedBadge.svg }}
               />
               <span className="badge-sweep" aria-hidden="true"></span>
             </div>
-            <h3 className="font-pixel text-white text-base text-center tracking-tight drop-shadow-md bg-slate-900/50 px-4 py-2 rounded hidden" aria-hidden="true">
-              {selectedBadge.name}
-            </h3>
+            <div className="max-w-sm text-center px-6 py-4 rounded-xl bg-slate-900/60 backdrop-blur-md border border-white/10 shadow-2xl">
+              <h3 className="font-pixel text-white text-sm md:text-base tracking-tight drop-shadow-md leading-relaxed">
+                {selectedBadge.name}
+              </h3>
+              <p className="font-pixel text-sky-300 text-[10px] mt-2 tracking-tight">
+                {selectedBadge.role}
+              </p>
+              <p className="text-slate-300 text-[11px] mt-1">
+                {selectedBadge.period}
+              </p>
+              <p className="text-slate-200 text-xs mt-3 leading-relaxed font-sans">
+                {selectedBadge.detail}
+              </p>
+            </div>
           </div>
         )}
 
-        <button onClick={closeModal} className="absolute top-6 right-6 text-white bg-slate-900/50 hover:bg-slate-900 p-2 rounded-full transition-colors z-20">
+        <button onClick={doClose} className="absolute top-6 right-6 text-white bg-slate-900/50 hover:bg-slate-900 p-2 rounded-full transition-colors z-20">
           <iconify-icon icon="solar:close-circle-linear" width="32"></iconify-icon>
         </button>
       </div>
