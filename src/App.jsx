@@ -1,11 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
-
-// Local assets (bundled by Vite)
 import bgVideo from './assets/night-cycle-to-eterna-pokemon-diamond-and-pearl-pixel-moewalls-com.mp4';
 import ksuSvg from './assets/Kennesaw_State_Owls_logo.svg?raw';
 import tcsSvg from './assets/tcs.svg?raw';
 
-// Data Constants
 const profileData = {
   name: "Abdi Farah",
   money: "₽3000",
@@ -23,7 +20,7 @@ const badgeLogoData = [
     toneClass: 'badge-ksu',
     svg: ksuSvg,
     role: 'B.S. Computer Engineering',
-    period: '2021 — May 2025',
+    period: '2020 — 2025',
     detail: 'Bachelor of Science in Computer Engineering. Coursework across embedded systems, full-stack development, and software design.'
   },
   {
@@ -33,7 +30,7 @@ const badgeLogoData = [
     toneClass: 'badge-tcs',
     svg: tcsSvg,
     role: 'Software Engineer',
-    period: '2025 — Present · Milford, OH',
+    period: 'May 2026 — Present · Cincinnati, OH',
     detail: 'Full-stack development with Node.js, code reviews, unit testing, and feature delivery in an Agile/Scrum team.'
   }
 ];
@@ -41,7 +38,7 @@ const badgeLogoData = [
 const projectsData = [
   {
     title: "CareConnect",
-    subtitle: "AI Baby Monitor (Capstone)",
+    subtitle: "AI Baby Monitor",
     desc: "An AI-powered baby monitoring system designed to detect and alert parents to specific audio and visual cues.",
     tags: ["Python", "AI", "Computer Vision"]
   },
@@ -60,7 +57,7 @@ const projectsData = [
 ];
 
 export default function App() {
-  const [loaderState, setLoaderState] = useState('active'); // active, hiding, hidden
+  const [loaderState, setLoaderState] = useState('active');
   const [count, setCount] = useState('000');
   const [activeProject, setActiveProject] = useState(null);
   const [selectedBadge, setSelectedBadge] = useState(null);
