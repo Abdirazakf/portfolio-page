@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import bgVideo from './assets/night-cycle-to-eterna-pokemon-diamond-and-pearl-pixel-moewalls-com.mp4';
 import ksuSvg from './assets/Kennesaw_State_Owls_logo.svg?raw';
-import tcsSvg from './assets/tcs.svg?raw';
+import tcsSvg from './assets/tcs-cropped.svg?raw';
 
 const profileData = {
   name: "Abdi Farah",
