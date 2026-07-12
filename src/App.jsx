@@ -162,8 +162,8 @@ const rolesData = [
 const contactLinks = [
   { label: 'GITHUB', href: 'https://www.github.com/Abdirazakf', icon: 'solar:code-circle-linear', external: true },
   { label: 'LINKEDIN', href: 'https://www.linkedin.com/in/abdirazak-farah', icon: 'solar:user-id-linear', external: true },
-  { label: 'EMAIL', href: 'mailto:your.email@example.com', icon: 'solar:letter-linear', external: false }, // TODO: swap in your real email
-  { label: 'RESUME', href: `${import.meta.env.BASE_URL}resume.pdf`, icon: 'solar:document-text-linear', external: true }
+  { label: 'EMAIL', href: 'mailto:farahabdirazak13@gmail.com', icon: 'solar:letter-linear', external: false }, // TODO: swap in your real email
+  { label: 'RESUME', href: `${import.meta.env.BASE_URL}/resume.pdf`, icon: 'solar:document-text-linear', external: true }
 ];
 
 export default function App() {
@@ -379,7 +379,7 @@ export default function App() {
                 ))}
               </div>
               <a
-                href={`${import.meta.env.BASE_URL}resume.pdf`}
+                href={`${import.meta.env.BASE_URL}/resume.pdf`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="font-pixel text-[9px] px-4 py-2 rounded-full bg-sky-500/90 text-white hover:bg-sky-600 hover:scale-105 transition-all shadow-sm"
@@ -690,7 +690,6 @@ export default function App() {
                 className="footer-top-btn group font-pixel text-[9px] text-slate-700 hover:text-sky-700 flex items-center gap-2 gba-inner-window bg-white/90 px-4 py-2.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
                 aria-label="Back to top"
               >
-                <span className="footer-top-arrow" aria-hidden="true">▲</span>
                 BACK TO TOP
               </button>
             </div>
