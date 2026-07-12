@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import bgVideo from './assets/night-cycle-to-eterna-pokemon-diamond-and-pearl-pixel-moewalls-com.mp4';
 import ksuSvg from './assets/Kennesaw_State_Owls_logo.svg?raw';
 import tcsSvg from './assets/tcs-cropped.svg?raw';
+import trainerSprite from './assets/trainer.png';
 
 const profileData = {
   name: "Abdi Farah",
@@ -40,26 +41,135 @@ const projectsData = [
     title: "CareConnect",
     subtitle: "AI Baby Monitor",
     desc: "An AI-powered baby monitoring system designed to detect and alert parents to specific audio and visual cues.",
-    tags: ["Python", "AI", "Computer Vision"]
+    tags: ["Python", "C", "TensorFlow", "MQTT", "AWS"]
   },
   {
     title: "Traffic Camera Dashboard",
     subtitle: "City of Peachtree Corners, GA",
     desc: "A centralized dashboard for monitoring municipal traffic cameras and analyzing flow data.",
-    tags: ["React", "Node.js", "Dashboard"]
+    tags: ["React.js", "Node.js", "InfluxDB", "Node-RED"]
   },
   {
     title: "Dynamic Learning Path",
     subtitle: "AI-Powered Generator",
     desc: "Generates personalized, adaptive learning paths for users based on their goals using AI models.",
-    tags: ["OpenAI API", "Next.js"]
+    tags: ["React.js", "FastAPI", "Next.js", "Redis"]
   }
+];
+
+const navLinks = [
+  { label: 'ABOUT', href: '#about' },
+  { label: 'SKILLS', href: '#skills' },
+  { label: 'PROJECTS', href: '#projects' },
+  { label: 'CONTACT', href: '#contact' }
+];
+
+const marqueeSkills = [
+  { name: 'JavaScript', icon: 'solar:code-square-linear' },
+  { name: 'TypeScript', icon: 'solar:code-2-linear' },
+  { name: 'React', icon: 'solar:atom-linear' },
+  { name: 'Node.js', icon: 'solar:server-linear' },
+  { name: 'Python', icon: 'solar:programming-linear' },
+  { name: 'PostgreSQL', icon: 'solar:database-linear' },
+  { name: 'Tailwind CSS', icon: 'solar:wind-linear' },
+  { name: 'Vite', icon: 'solar:bolt-linear' },
+  { name: 'AWS', icon: 'solar:cloud-linear' },
+  { name: 'Git / CI-CD', icon: 'solar:branching-paths-up-linear' },
+  { name: 'Java', icon: 'solar:cup-hot-linear' },
+  { name: 'Agile / Scrum', icon: 'solar:refresh-circle-linear' }
+];
+
+// Renders the trainer sprite if available, otherwise a GBA-style empty slot
+function SpriteSlot() {
+  if (trainerSprite) {
+    return (
+      <img
+        src={trainerSprite}
+        alt="Pixel art trainer sprite of Abdi Farah"
+        className="w-full h-full object-contain pixelated select-none"
+        draggable="false"
+      />
+    );
+  }
+  return (
+    <div className="text-center p-2 opacity-50 select-none flex flex-col items-center gap-2">
+      <iconify-icon icon="solar:user-rounded-linear" width="48" className="text-slate-600"></iconify-icon>
+      <span className="text-xs font-pixel leading-relaxed text-slate-600">
+        SPRITE<br/>SLOT
+      </span>
+    </div>
+  );
+}
+
+const aboutText = `I'm a recent graduate in Computer Engineering from Kennesaw State University, and I've spent the past few years 
+diving deep into projects that combine my interests in embedded systems, AI, and full stack development. What gets me 
+excited: Hardware projects, especially ones involving sensors, microcontrollers, and real-world data. 
+I love the challenge of making different systems talk to each other, whether that's getting AWS to play nice with 
+a Raspberry Pi or building MQTT pipelines that actually scale. I'm also fascinated by computer vision and how we can 
+train models to understand visual data in meaningful ways.`;
+
+const skillsData = [
+  {
+    category: 'Languages',
+    skills: [
+      { name: 'JavaScript / TypeScript', level: 88 },
+      { name: 'Python', level: 80 },
+      { name: 'SQL', level: 75 },
+      { name: 'Java', level: 70 },
+      { name: 'C / C++', level: 62 }
+    ]
+  },
+  {
+    category: 'Frontend',
+    skills: [
+      { name: 'React', level: 85 },
+      { name: 'HTML / CSS', level: 90 },
+      { name: 'Tailwind CSS', level: 82 },
+      { name: 'Vite', level: 78 }
+    ]
+  },
+  {
+    category: 'Backend & Tools',
+    skills: [
+      { name: 'Node.js / Express', level: 85 },
+      { name: 'PostgreSQL', level: 74 },
+      { name: 'Git / GitHub Actions', level: 84 },
+      { name: 'AWS', level: 64 },
+      { name: 'Agile / Scrum', level: 80 }
+    ]
+  }
+];
+
+const rolesData = [
+  {
+    title: 'Full-Stack Engineer',
+    desc: 'End-to-end feature work — from database schema to polished UI.'
+  },
+  {
+    title: 'Frontend Engineer',
+    desc: 'React, performance, and interfaces people actually enjoy using.'
+  },
+  {
+    title: 'Backend Engineer',
+    desc: 'APIs, services, and data layers built to be tested and scaled.'
+  },
+  {
+    title: 'Forward Deployed Engineer',
+    desc: 'Embedding with customers to turn real problems into shipped solutions.'
+  }
+];
+
+const contactLinks = [
+  { label: 'GITHUB', href: 'https://www.github.com/Abdirazakf', icon: 'solar:code-circle-linear', external: true },
+  { label: 'LINKEDIN', href: 'https://www.linkedin.com/in/abdirazak-farah', icon: 'solar:user-id-linear', external: true },
+  { label: 'EMAIL', href: 'mailto:your.email@example.com', icon: 'solar:letter-linear', external: false }, // TODO: swap in your real email
+  { label: 'RESUME', href: `${import.meta.env.BASE_URL}resume.pdf`, icon: 'solar:document-text-linear', external: true }
 ];
 
 export default function App() {
   const [loaderState, setLoaderState] = useState('active');
   const [count, setCount] = useState('000');
-  const [activeProject, setActiveProject] = useState(null);
+  const [projectIndex, setProjectIndex] = useState(0);
   const [selectedBadge, setSelectedBadge] = useState(null);
   
   const wrapperRef = useRef(null);
@@ -120,6 +230,11 @@ export default function App() {
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add('active');
+            // Clear stagger delays after the entrance finishes so hover
+            // transitions on the same element respond instantly
+            setTimeout(() => {
+              entry.target.classList.remove('reveal-d-1', 'reveal-d-2', 'reveal-d-3', 'reveal-d-4');
+            }, 900);
             observer.unobserve(entry.target);
           }
         });
@@ -187,13 +302,24 @@ export default function App() {
     doClose();
   };
 
-  // Project Click Handler
-  const toggleProject = (e, index) => {
-    e.stopPropagation();
-    setActiveProject(activeProject === index ? null : index);
-  };
+  // Project Carousel Handlers
+  const projectCount = projectsData.length;
+  const nextProject = () => setProjectIndex((i) => (i + 1) % projectCount);
+  const prevProject = () => setProjectIndex((i) => (i - 1 + projectCount) % projectCount);
 
-  const resetProjects = () => setActiveProject(null);
+  // Computes each card's 3D placement from its position relative to the
+  // featured card, taking the shortest path around the ring
+  const getProjectCardStyle = (index) => {
+    let rel = (index - projectIndex + projectCount) % projectCount;
+    if (rel > projectCount / 2) rel -= projectCount;
+    const abs = Math.abs(rel);
+    return {
+      transform: `translateX(calc(${rel} * var(--carousel-offset, 190px))) scale(${1 - abs * 0.1}) rotateY(${rel * -12}deg)`,
+      opacity: abs === 0 ? 1 : 0.55,
+      filter: abs === 0 ? 'none' : 'brightness(0.85)',
+      zIndex: 10 - abs * 4
+    };
+  };
 
   // Esc key for modal
   useEffect(() => {
@@ -232,9 +358,41 @@ export default function App() {
         </div>
       )}
 
-      <div onClick={resetProjects} className="relative z-10 w-full flex flex-col min-h-screen">
+      <div className="relative z-10 w-full flex flex-col min-h-screen">
+        {/* NAVBAR — fixed glass pill */}
+        <nav className="fixed top-0 w-full z-40 px-4 py-4">
+          <div className="max-w-screen-xl mx-auto">
+            <div className="glass-light rounded-full px-5 py-2.5 flex items-center justify-between mx-auto max-w-2xl">
+              <a href="#top" className="font-pixel text-[10px] text-slate-800 hover:text-sky-600 transition-colors tracking-tight flex items-center gap-2 group">
+                <span className="pokeball-dot group-hover:rotate-180 transition-transform duration-500" aria-hidden="true"></span>
+                ABDI FARAH
+              </a>
+              <div className="hidden md:flex items-center gap-5">
+                {navLinks.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    className="font-pixel text-[9px] text-slate-600 hover:text-sky-700 transition-colors"
+                  >
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+              <a
+                href={`${import.meta.env.BASE_URL}resume.pdf`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-pixel text-[9px] px-4 py-2 rounded-full bg-sky-500/90 text-white hover:bg-sky-600 hover:scale-105 transition-all shadow-sm"
+              >
+                RESUME
+              </a>
+            </div>
+          </div>
+        </nav>
+
         {/* SECTION 1: HERO / TRAINER CARD */}
         <section 
+          id="top"
           className="min-h-screen flex w-full mb-2 px-4 relative items-center justify-center"
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
@@ -281,12 +439,7 @@ export default function App() {
                     <span className="font-pixel text-sm md:text-lg text-gba">{profileData.idNo}</span>
                   </div>
                   <div className="gba-inner-window w-full aspect-[4/5] flex items-center justify-center relative overflow-hidden">
-                    <div className="text-center p-2 opacity-50 select-none flex flex-col items-center gap-2">
-                      <iconify-icon icon="solar:user-rounded-linear" width="48" className="text-slate-600"></iconify-icon>
-                      <span className="text-xs font-pixel leading-relaxed text-slate-600">
-                        SPRITE<br/>SLOT
-                      </span>
-                    </div>
+                    <SpriteSlot />
                   </div>
                 </div>
               </div>
@@ -320,76 +473,227 @@ export default function App() {
           </div>
         </section>
 
-        {/* SECTION 2: PROJECTS */}
-        <section className="w-full max-w-5xl mx-auto px-4 py-12 reveal">
-          <h2 className="font-pixel tracking-tight text-xl text-center mb-10 text-slate-800">
-            DATA / LOG
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 justify-items-center items-start min-h-[450px] w-full max-w-5xl mx-auto pt-10 pb-8">
-            {projectsData.map((project, index) => {
-              const isActive = activeProject === index;
-              const isDimmed = activeProject !== null && activeProject !== index;
-
-              return (
-                <div 
-                  key={index}
-                  onClick={(e) => toggleProject(e, index)}
-                  className={`project-card w-full max-w-[320px] transition-all duration-500 ease-out cursor-pointer group ${
-                    isActive 
-                      ? 'scale-105 z-30 opacity-100' 
-                      : isDimmed 
-                        ? 'scale-95 opacity-40 z-10' 
-                        : 'hover:scale-[1.03] z-10 opacity-100'
-                  }`}
+        {/* SKILLS MARQUEE STRIP */}
+        <div className="w-full border-y-4 border-white/60 glass-light overflow-hidden py-4 relative z-10 mb-2">
+          <div className="marquee-container relative max-w-7xl mx-auto w-full">
+            <div className="marquee-content flex gap-10 w-max items-center">
+              {[...marqueeSkills, ...marqueeSkills].map((skill, i) => (
+                <div
+                  key={`${skill.name}-${i}`}
+                  className="flex items-center gap-2 text-slate-700 select-none shrink-0"
+                  aria-hidden={i >= marqueeSkills.length ? 'true' : undefined}
                 >
-                  <div className={`gba-inner-window p-5 sm:p-6 flex flex-col bg-white/95 backdrop-blur shadow-lg border transition-all duration-500 rounded-xl relative overflow-hidden ${
-                    isActive ? 'border-sky-400 shadow-2xl' : 'border-slate-300 hover:shadow-xl'
-                  }`}>
-                    <h3 className="font-pixel text-sm text-slate-800 mb-1 tracking-tight group-hover:text-sky-600 transition-colors">
-                      {project.title}
-                    </h3>
-                    <p className="text-[10px] sm:text-xs text-slate-500 font-medium mb-3">
-                      {project.subtitle}
-                    </p>
-                    <p className={`text-xs sm:text-sm text-slate-600 leading-relaxed transition-all duration-500 ${
-                      isActive ? '' : 'line-clamp-3'
-                    }`}>
-                      {project.desc}
-                    </p>
-                    <div 
-                      className={`project-skills flex flex-wrap gap-2 transition-all duration-500 overflow-hidden ${
-                        isActive ? 'opacity-100 max-h-[200px] translate-y-0 mt-4' : 'opacity-0 max-h-0 translate-y-2 mt-0'
-                      }`}
-                    >
-                      {project.tags.map(tag => (
-                        <span key={tag} className="px-2 py-1 bg-slate-100 border border-slate-200 rounded text-[10px] text-slate-600">
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                    <span className={`mt-3 text-[9px] font-pixel text-center text-sky-500 transition-opacity duration-300 ${
-                      isActive ? 'opacity-0' : 'opacity-60 group-hover:opacity-100'
-                    }`}>
-                      SELECT
-                    </span>
-                  </div>
+                  <iconify-icon icon={skill.icon} width="18" className="text-sky-700"></iconify-icon>
+                  <span className="font-pixel text-[9px] tracking-tight whitespace-nowrap pt-0.5">
+                    {skill.name}
+                  </span>
                 </div>
-              );
-            })}
+              ))}
+            </div>
+          </div>
+        </div>
+
+        {/* SECTION 2: ABOUT */}
+        <section id="about" className="w-full max-w-5xl mx-auto px-4 py-12 scroll-mt-8 reveal">
+          <h2 className="font-pixel tracking-tight text-xl text-center mb-10 text-slate-800">
+            ABOUT
+          </h2>
+          <div className="gba-window p-1">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 md:p-8 items-center">
+              <div className="gba-inner-window aspect-[4/5] max-w-[220px] w-full mx-auto flex items-center justify-center overflow-hidden">
+                <SpriteSlot />
+              </div>
+              <div className="md:col-span-2">
+                <p className="text-sm md:text-base leading-relaxed text-slate-700 bg-white/85 backdrop-blur rounded-xl p-5 shadow-inner">
+                  {aboutText}
+                </p>
+              </div>
+            </div>
           </div>
         </section>
 
-        {/* SECTION 3: FOOTER */}
-        <footer className="w-full mt-auto py-12 reveal flex flex-col items-center gap-6">
-          <div className="flex gap-4">
-            <a href="https://www.github.com/Abdirazakf" target="_blank" rel="noopener noreferrer" className="gba-inner-window px-4 py-2 flex items-center gap-2 hover:bg-slate-100 transition-colors cursor-pointer group">
-              <iconify-icon icon="solar:code-circle-linear" width="20" className="text-slate-600 group-hover:text-black"></iconify-icon>
-              <span className="font-pixel text-xs pt-1">GITHUB</span>
-            </a>
-            <a href="https://www.linkedin.com/in/abdirazak-farah" target="_blank" rel="noopener noreferrer" className="gba-inner-window px-4 py-2 flex items-center gap-2 hover:bg-slate-100 transition-colors cursor-pointer group">
-              <iconify-icon icon="solar:user-id-linear" width="20" className="text-slate-600 group-hover:text-[#0077b5]"></iconify-icon>
-              <span className="font-pixel text-xs pt-1">LINKEDIN</span>
-            </a>
+        {/* SECTION 3: SKILLS */}
+        <section id="skills" className="w-full max-w-5xl mx-auto px-4 py-12 scroll-mt-8 reveal">
+          <h2 className="font-pixel tracking-tight text-xl text-center mb-10 text-slate-800">
+            SKILLS
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            {skillsData.map((group, groupIdx) => (
+              <div
+                key={group.category}
+                className={`gba-inner-window bg-white/90 backdrop-blur p-5 shadow-lg card-lift reveal reveal-d-${groupIdx + 1}`}
+              >
+                <h3 className="font-pixel text-[11px] text-slate-800 mb-5 tracking-tight text-center">
+                  {group.category.toUpperCase()}
+                </h3>
+                <div className="flex flex-col gap-4">
+                  {group.skills.map((skill) => (
+                    <div key={skill.name}>
+                      <div className="flex justify-between items-end mb-1">
+                        <span className="text-[11px] font-medium text-slate-700">{skill.name}</span>
+                        <span className="font-pixel text-[9px] text-slate-500">{skill.level}</span>
+                      </div>
+                      <div
+                        className="stat-track"
+                        role="progressbar"
+                        aria-label={`${skill.name} proficiency`}
+                        aria-valuenow={skill.level}
+                        aria-valuemin="0"
+                        aria-valuemax="100"
+                      >
+                        <div className="stat-fill" style={{ '--fill': `${skill.level}%` }}></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* SECTION 4: PROJECTS */}
+        <section id="projects" className="w-full max-w-5xl mx-auto px-4 py-12 scroll-mt-8 reveal">
+          <h2 className="font-pixel tracking-tight text-xl text-center text-slate-800">
+            PROJECTS
+          </h2>
+          <div className="project-carousel relative flex items-center justify-center pt-6 pb-4" style={{ perspective: '1200px' }}>
+            {/* Prev */}
+            <button
+              type="button"
+              onClick={prevProject}
+              aria-label="Previous project"
+              className="absolute left-0 sm:left-4 z-20 w-11 h-11 rounded-full glass-light flex items-center justify-center text-slate-700 hover:text-sky-700 hover:scale-110 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+            >
+              <iconify-icon icon="solar:alt-arrow-left-linear" width="22"></iconify-icon>
+            </button>
+
+            {/* Track */}
+            <div className="relative w-full max-w-md h-[430px] sm:h-[460px] flex items-center justify-center">
+              <div className="absolute inset-0 flex items-center justify-center" style={{ transformStyle: 'preserve-3d' }}>
+                {projectsData.map((project, index) => {
+                  const isFeatured = index === projectIndex;
+                  return (
+                    <div
+                      key={project.title}
+                      onClick={() => !isFeatured && setProjectIndex(index)}
+                      style={getProjectCardStyle(index)}
+                      className={`absolute w-[280px] sm:w-80 transition-all duration-500 ease-out ${
+                        isFeatured ? '' : 'cursor-pointer'
+                      }`}
+                      aria-hidden={isFeatured ? undefined : 'true'}
+                    >
+                      <div className={`gba-inner-window p-5 sm:p-6 flex flex-col bg-white/95 backdrop-blur rounded-xl border transition-all duration-500 min-h-[340px] ${
+                        isFeatured ? 'border-sky-400 shadow-2xl' : 'border-slate-300 shadow-lg'
+                      }`}>
+                        <h3 className={`font-pixel text-sm mb-1 tracking-tight transition-colors ${
+                          isFeatured ? 'text-sky-700' : 'text-slate-800'
+                        }`}>
+                          {project.title}
+                        </h3>
+                        <p className="text-[10px] sm:text-xs text-slate-500 font-medium mb-3">
+                          {project.subtitle}
+                        </p>
+                        <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                          {project.desc}
+                        </p>
+                        <div className={`flex flex-wrap gap-2 transition-all duration-500 ${
+                          isFeatured ? 'opacity-100 mt-4' : 'opacity-0 mt-4'
+                        }`}>
+                          {project.tags.map(tag => (
+                            <span key={tag} className="px-2 py-1 bg-slate-100 border border-slate-200 rounded text-[10px] text-slate-600">
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Next */}
+            <button
+              type="button"
+              onClick={nextProject}
+              aria-label="Next project"
+              className="absolute right-0 sm:right-4 z-20 w-11 h-11 rounded-full glass-light flex items-center justify-center text-slate-700 hover:text-sky-700 hover:scale-110 transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+            >
+              <iconify-icon icon="solar:alt-arrow-right-linear" width="22"></iconify-icon>
+            </button>
+          </div>
+
+          {/* Dots */}
+          <div className="flex justify-center gap-3 mt-2">
+            {projectsData.map((project, index) => (
+              <button
+                key={project.title}
+                type="button"
+                onClick={() => setProjectIndex(index)}
+                aria-label={`Go to ${project.title}`}
+                className={`w-3 h-3 rounded-full border-2 border-slate-500 transition-all ${
+                  index === projectIndex ? 'bg-sky-500 scale-110' : 'bg-white/70 hover:bg-sky-200'
+                }`}
+              />
+            ))}
+          </div>
+        </section>
+
+        {/* SECTION 5: OPEN TO / CONTACT */}
+        <section id="contact" className="w-full max-w-5xl mx-auto px-4 py-12 scroll-mt-8 reveal">
+          <h2 className="font-pixel tracking-tight text-xl text-center mb-8 text-slate-800">
+            OPEN TO
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+            {rolesData.map((role, roleIdx) => (
+              <div
+                key={role.title}
+                className={`gba-inner-window bg-white/90 backdrop-blur p-5 shadow-lg flex flex-col gap-2 card-lift reveal reveal-d-${roleIdx + 1}`}
+              >
+                <h3 className="font-pixel text-[10px] text-slate-800 leading-relaxed tracking-tight">
+                  {role.title.toUpperCase()}
+                </h3>
+                <p className="text-xs text-slate-600 leading-relaxed">
+                  {role.desc}
+                </p>
+              </div>
+            ))}
+          </div>
+          <div className="flex flex-wrap justify-center gap-4">
+            {contactLinks.map((link) => (
+              <a
+                key={link.label}
+                href={link.href}
+                {...(link.external ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+                className="gba-inner-window bg-white/90 px-4 py-2 flex items-center gap-2 hover:bg-slate-100 transition-colors cursor-pointer group"
+              >
+                <iconify-icon icon={link.icon} width="20" className="text-slate-600 group-hover:text-sky-600"></iconify-icon>
+                <span className="font-pixel text-xs pt-1">{link.label}</span>
+              </a>
+            ))}
+          </div>
+        </section>
+
+        {/* FOOTER */}
+        <footer className="w-full mt-auto px-4 pb-4">
+          <div className="gba-window max-w-5xl mx-auto p-1">
+            <div className="px-5 sm:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <p className="font-pixel text-[9px] text-gba leading-relaxed text-center sm:text-left">
+                © {new Date().getFullYear()} ABDI FARAH
+                <span className="hidden sm:inline"> · </span>
+                <br className="sm:hidden" />
+                THANKS FOR PLAYING!
+              </p>
+              <button
+                type="button"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                className="footer-top-btn group font-pixel text-[9px] text-slate-700 hover:text-sky-700 flex items-center gap-2 gba-inner-window bg-white/90 px-4 py-2.5 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-sky-400"
+                aria-label="Back to top"
+              >
+                <span className="footer-top-arrow" aria-hidden="true">▲</span>
+                BACK TO TOP
+              </button>
+            </div>
           </div>
         </footer>
       </div>
