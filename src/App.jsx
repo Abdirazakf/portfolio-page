@@ -735,10 +735,6 @@ export default function App() {
             </div>
           </div>
         )}
-
-        <button onClick={doClose} className="absolute top-6 right-6 text-white bg-slate-900/50 hover:bg-slate-900 p-2 rounded-full transition-colors z-20">
-          <iconify-icon icon="solar:close-circle-linear" width="32"></iconify-icon>
-        </button>
       </div>
     </>
   );
