@@ -1,0 +1,12 @@
+{
+  "name": "portfolio-page",
+  "compatibility_date": "2026-08-03",
+  "assets": {
+    "directory": "./dist",
+    "not_found_handling": "single-page-application"
+  },
+  "routes": [
+    { "pattern": "www.abdi-farah.com", "custom_domain": true },
+    { "pattern": "abdi-farah.com", "custom_domain": true }
+  ]
+}
